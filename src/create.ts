@@ -3,7 +3,7 @@ import { create } from "@suzuki-shunsuke/github-app-token";
 import { newAppOctokit } from "./app_octokit";
 import { getPermissions } from "./permissions";
 
-const parseRepositories = (input: string): string[] =>
+export const parseRepositories = (input: string): string[] =>
   input
     .split(/[\n,]+/)
     .map((repository) => repository.trim())
@@ -21,17 +21,31 @@ const parseRepositories = (input: string): string[] =>
       );
     });
 
+/**
+ * Rejects an enterprise target combined with an owner or repository one.
+ *
+ * They select different installations, so GitHub would answer about whichever
+ * this action happened to ask for, which is worse than saying no.
+ */
+export const validateTarget = (
+  enterprise: string,
+  owner: string,
+  repositories: string[],
+) => {
+  if (enterprise && (owner || repositories.length > 0)) {
+    throw new Error(
+      "The 'enterprise' input can't be used with 'owner' or 'repositories'",
+    );
+  }
+};
+
 export const createToken = async () => {
   const permissions = getPermissions();
   const enterprise = core.getInput("enterprise");
   const owner = core.getInput("owner");
   const repositories = parseRepositories(core.getInput("repositories"));
 
-  if (enterprise && (owner || repositories.length > 0)) {
-    throw new Error(
-      "The 'enterprise' input can't be used with 'owner' or 'repositories'",
-    );
-  }
+  validateTarget(enterprise, owner, repositories);
 
   const octokit = newAppOctokit();
 
