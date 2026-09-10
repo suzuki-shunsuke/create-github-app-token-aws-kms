@@ -94,6 +94,10 @@ Unlike `actions/create-github-app-token`, at least one `permission-*` input is
 required. Granting a token every permission the app holds is rarely what a
 workflow needs, so this action asks you to say which ones you want.
 
+Either `client-id` or `app-id` identifies the app. GitHub accepts both as the
+JSON Web Token issuer, so neither is deprecated here. `client-id` takes
+precedence when both are set.
+
 ## Outputs
 
 | Name              | Description                   |

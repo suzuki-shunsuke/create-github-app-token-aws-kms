@@ -6,12 +6,16 @@ branding:
   color: gray-dark
 inputs:
   client-id:
-    description: GitHub App Client ID
+    description: |
+      GitHub App Client ID.
+      Either client-id or app-id is required.
+      client-id takes precedence when both are set.
     required: false
   app-id:
-    description: GitHub App ID
+    description: |
+      GitHub App ID.
+      Either client-id or app-id is required.
     required: false
-    deprecationMessage: "Use 'client-id' instead."
   kms-key-id:
     description: |
       Key ID, key ARN, alias name, or alias ARN of the AWS KMS key holding the
