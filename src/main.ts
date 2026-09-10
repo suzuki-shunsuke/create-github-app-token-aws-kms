@@ -71,9 +71,6 @@ const run = async () => {
   core.setOutput("installation-id", token.installationId);
   core.setOutput("app-slug", token.appSlug);
 
-  if (core.getBooleanInput("skip-token-revoke")) {
-    return;
-  }
   // The post step reads these to revoke the token.
   core.saveState("token", token.token);
   core.saveState("expires-at", token.expiresAt);

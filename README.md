@@ -48,7 +48,7 @@ jobs:
           GH_TOKEN: ${{steps.token.outputs.token}}
 ```
 
-The token is revoked when the job ends, unless `skip-token-revoke` is set.
+The token is revoked when the job ends.
 
 ## AWS credentials
 
@@ -77,18 +77,17 @@ The IAM role needs `kms:Sign` on that key, and nothing else.
 
 ## Inputs
 
-| Name                | Required | Description                                                                                                     |
-| ------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
-| `client-id`         |          | GitHub App Client ID. Either this or `app-id` is required                                                       |
-| `app-id`            |          | GitHub App ID. Deprecated in favour of `client-id`                                                              |
-| `kms-key-id`        | ✔        | Key ID, key ARN, alias name, or alias ARN of the KMS key                                                        |
-| `role-to-assume`    |          | ARN of the AWS IAM role to assume with the GitHub OIDC token                                                    |
-| `owner`             |          | Owner of the installation. Defaults to the current repository owner                                             |
-| `repositories`      |          | Comma or newline-separated repositories to scope the token to. Defaults to every repository of the installation |
-| `enterprise`        |          | Slug of the enterprise account. Can't be used with `owner` or `repositories`                                    |
-| `skip-token-revoke` |          | If true, the token isn't revoked when the job ends                                                              |
-| `github-api-url`    |          | URL of the GitHub REST API. Defaults to the current one                                                         |
-| `permission-*`      | ✔        | The level of each permission to grant. At least one is required                                                 |
+| Name             | Required | Description                                                                                                     |
+| ---------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `client-id`      |          | GitHub App Client ID. Either this or `app-id` is required                                                       |
+| `app-id`         |          | GitHub App ID. Either this or `client-id` is required                                                           |
+| `kms-key-id`     | ✔        | Key ID, key ARN, alias name, or alias ARN of the KMS key                                                        |
+| `role-to-assume` |          | ARN of the AWS IAM role to assume with the GitHub OIDC token                                                    |
+| `owner`          |          | Owner of the installation. Defaults to the current repository owner                                             |
+| `repositories`   |          | Comma or newline-separated repositories to scope the token to. Defaults to every repository of the installation |
+| `enterprise`     |          | Slug of the enterprise account. Can't be used with `owner` or `repositories`                                    |
+| `github-api-url` |          | URL of the GitHub REST API. Defaults to the current one                                                         |
+| `permission-*`   | ✔        | The level of each permission to grant. At least one is required                                                 |
 
 Unlike `actions/create-github-app-token`, at least one `permission-*` input is
 required. Granting a token every permission the app holds is rarely what a

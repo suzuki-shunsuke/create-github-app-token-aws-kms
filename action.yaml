@@ -40,10 +40,6 @@ inputs:
   enterprise:
     description: The slug of the enterprise account where the GitHub App is installed (cannot be used with 'owner' or 'repositories')
     required: false
-  skip-token-revoke:
-    description: If true, the token will not be revoked when the current job is complete
-    required: false
-    default: "false"
   github-api-url:
     description: The URL of the GitHub REST API.
     default: ${{ github.api_url }}

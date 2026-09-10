@@ -2,10 +2,6 @@ import * as core from "@actions/core";
 import { hasExpired, revoke } from "@suzuki-shunsuke/github-app-token";
 
 const run = async () => {
-  if (core.getBooleanInput("skip-token-revoke")) {
-    core.info("skip revoking the token");
-    return;
-  }
   const token = core.getState("token");
   if (!token) {
     core.info("no token to revoke");
