@@ -21,7 +21,7 @@ const parseRepositories = (input: string): string[] =>
       );
     });
 
-const run = async () => {
+export const createToken = async () => {
   const permissions = getPermissions();
   const enterprise = core.getInput("enterprise");
   const owner = core.getInput("owner");
@@ -75,11 +75,3 @@ const run = async () => {
   core.saveState("token", token.token);
   core.saveState("expires-at", token.expiresAt);
 };
-
-try {
-  await run();
-} catch (error) {
-  core.setFailed(
-    error instanceof Error ? error.message : JSON.stringify(error),
-  );
-}

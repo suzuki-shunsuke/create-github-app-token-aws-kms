@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "build": "ncc build src/main.ts -o dist/main --license LICENSE && ncc build src/post.ts -o dist/post --license LICENSE",
+    "build": "ncc build src/index.ts -o dist --license LICENSE",
     "fmt": "prettier --write src",
     "lint": "eslint && tsc --noEmit",
     "typecheck": "tsc --noEmit"

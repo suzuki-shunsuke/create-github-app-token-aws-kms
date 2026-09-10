@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { hasExpired, revoke } from "@suzuki-shunsuke/github-app-token";
 
-const run = async () => {
+const revokeToken = async () => {
   const token = core.getState("token");
   if (!token) {
     core.info("no token to revoke");
@@ -18,14 +18,20 @@ const run = async () => {
   });
 };
 
-try {
-  await run();
-} catch (error) {
-  // A token left unrevoked expires within an hour, so failing the job over it
-  // would be worse than the warning.
-  core.warning(
-    `failed to revoke the token: ${
-      error instanceof Error ? error.message : JSON.stringify(error)
-    }`,
-  );
-}
+/**
+ * Revokes the token the main step created.
+ *
+ * A failure is only a warning. The token expires within an hour on its own, so
+ * failing the job over a failed revocation would be worse than the warning.
+ */
+export const post = async () => {
+  try {
+    await revokeToken();
+  } catch (error) {
+    core.warning(
+      `failed to revoke the token: ${
+        error instanceof Error ? error.message : JSON.stringify(error)
+      }`,
+    );
+  }
+};
