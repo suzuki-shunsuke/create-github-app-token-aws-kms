@@ -22,6 +22,12 @@ inputs:
       GitHub App private key.
       The key never leaves KMS. Only the JSON Web Token signing is delegated to it.
     required: true
+  aws-region:
+    description: |
+      The AWS region of the KMS key.
+      It can be omitted when 'kms-key-id' is a key ARN, which carries the
+      region. Otherwise it falls back to the AWS_REGION environment variable.
+    required: false
   role-to-assume:
     description: |
       ARN of the AWS IAM role to assume with the GitHub OIDC token.

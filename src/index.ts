@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import { createToken } from "./create";
 import { post } from "./post";
+import { explainMissingRegion } from "./region";
 
 /**
  * The entry point of both the main step and the post step.
@@ -20,7 +21,8 @@ const run = async () => {
 
 try {
   await run();
-} catch (error) {
+} catch (caught) {
+  const error = explainMissingRegion(caught);
   core.setFailed(
     error instanceof Error ? error.message : JSON.stringify(error),
   );

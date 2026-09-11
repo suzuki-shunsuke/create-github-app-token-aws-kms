@@ -4,6 +4,7 @@ import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
 import { credentials } from "@suzuki-shunsuke/actions-aws-oidc";
 import { createJwt } from "@suzuki-shunsuke/github-app-jwt-aws-kms";
+import { resolveRegion } from "./region";
 
 /**
  * Builds a KMS client.
@@ -17,13 +18,17 @@ import { createJwt } from "@suzuki-shunsuke/github-app-jwt-aws-kms";
  * Otherwise the standard AWS credential chain is used, so
  * aws-actions/configure-aws-credentials works as well.
  */
-const newKMSClient = (): KMSClient => {
+const newKMSClient = (keyId: string): KMSClient => {
+  const region = resolveRegion({
+    region: core.getInput("aws-region"),
+    keyId,
+  });
   const roleArn = core.getInput("role-to-assume");
   if (!roleArn) {
-    return new KMSClient({});
+    return new KMSClient({ region });
   }
   core.info(`assuming an AWS IAM role with the GitHub OIDC token: ${roleArn}`);
-  return new KMSClient({ credentials: credentials({ roleArn }) });
+  return new KMSClient({ region, credentials: credentials({ roleArn }) });
 };
 
 /**
@@ -47,7 +52,7 @@ export const newAppOctokit = (): Octokit => {
     authStrategy: createAppAuth,
     auth: {
       appId,
-      createJwt: createJwt({ keyId, client: newKMSClient() }),
+      createJwt: createJwt({ keyId, client: newKMSClient(keyId) }),
     },
   });
 };

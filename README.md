@@ -62,7 +62,16 @@ one doesn't, such as an external ID, a session policy or a custom STS endpoint.
 Note that it exports the credentials as environment variables or writes them to
 `~/.aws/credentials`, where the rest of the job can read them.
 
-The AWS region comes from the standard `AWS_REGION` environment variable.
+### The region
+
+A key ARN carries its region, so passing `kms-key-id` as an ARN is enough and
+nothing else needs setting. For an alias or a bare key id, set the `aws-region`
+input, or leave it to the AWS SDK, which resolves `AWS_REGION` and
+`~/.aws/config` as it normally does. When the SDK can't find one either, the
+action says which of its inputs would have answered the question.
+
+An ARN wins over the environment and a profile, because it states where the key
+actually is while they are only defaults.
 
 ## The KMS key
 
@@ -80,6 +89,7 @@ The IAM role needs `kms:Sign` on that key, and nothing else.
 | `client-id`      |          | GitHub App Client ID. Either this or `app-id` is required                    |
 | `app-id`         |          | GitHub App ID. Either this or `client-id` is required                        |
 | `kms-key-id`     | ✔        | Key ID, key ARN, alias name, or alias ARN of the KMS key                     |
+| `aws-region`     |          | Region of the KMS key. Not needed when `kms-key-id` is an ARN                |
 | `role-to-assume` |          | ARN of the AWS IAM role to assume with the GitHub OIDC token                 |
 | `owner`          |          | Owner of the installation. Defaults to the current repository owner          |
 | `repositories`   |          | Comma or newline-separated repositories to scope the token to                |
