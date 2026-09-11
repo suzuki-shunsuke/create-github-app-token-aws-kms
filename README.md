@@ -132,3 +132,19 @@ precedence when both are set.
 | `token`           | The installation access token |
 | `installation-id` | The installation id           |
 | `app-slug`        | The slug of the GitHub App    |
+
+## How To Set Up
+
+It's a bit tedious to set up AWS for this action:
+
+1. Create an AWS KMS key
+2. Import a private key to AWS KMS
+3. Create an AWS IAM Role and allow the workflow to assume the IAM Role
+
+So I developed an agent skill for this.
+
+https://github.com/suzuki-shunsuke/agent-skills/blob/main/skills/github-app-private-key-aws-kms/SKILL.md
+
+```sh
+gh skill install suzuki-shunsuke/agent-skills github-app-private-key-aws-kms
+```
