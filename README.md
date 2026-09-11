@@ -33,7 +33,7 @@ jobs:
   example:
     runs-on: ubuntu-latest
     steps:
-      - uses: suzuki-shunsuke/create-github-app-token-aws-kms@v0
+      - uses: suzuki-shunsuke/create-github-app-token-aws-kms@c4b659c57b5e2319d887706fe3f6ff0f7ee9afbc # v0.0.1
         id: token
         with:
           client-id: ${{vars.APP_CLIENT_ID}}
