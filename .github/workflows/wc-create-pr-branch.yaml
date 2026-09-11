@@ -1,0 +1,65 @@
+---
+name: wc-create-pr-branch
+run-name: wc-create-pr-branch (${{inputs.pr}})
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        description: version
+        required: true
+      pr:
+        description: "Pull Request Number"
+        required: false
+        type: string
+      is_comment:
+        description: If the comment is posted
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      TAKUMI_GUARD_BOT_ID:
+        required: true
+
+jobs:
+  create-pr-branch:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write # Required for OIDC
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - if: inputs.pr != ''
+        run: gh pr checkout "$PR"
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+          PR: ${{inputs.pr}}
+
+      - uses: aquaproj/aqua-installer@96a9bc20066c5bf5e275b41019cfc165b25f4e2e # v4.0.5
+        with:
+          aqua_version: v2.62.3
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          cache-dependency-path: package-lock.json
+          cache: npm
+      - uses: flatt-security/setup-takumi-guard-npm@6d4182745c1e474c35a023573c2612c085be45a4 # v1.2.0
+        with:
+          bot-id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+      - run: npm ci
+
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+      - uses: suzuki-shunsuke/release-js-action@ff106e3a3f5b34f174a23db3110031fbf463f15c # v0.2.1
+        with:
+          version: ${{inputs.version}}
+          is_comment: ${{inputs.is_comment}}

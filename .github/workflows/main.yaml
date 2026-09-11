@@ -1,0 +1,16 @@
+name: Update the latest branch
+on:
+  push:
+    branches:
+      - main
+jobs:
+  update-latest-branch:
+    uses: ./.github/workflows/wc-create-pr-branch.yaml
+    with:
+      version: latest
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write

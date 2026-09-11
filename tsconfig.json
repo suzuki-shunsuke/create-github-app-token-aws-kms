@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "target": "ES2023",
+    "rootDir": "./src",
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    // Without this, @types/node isn't picked up and every Node global goes missing.
+    "types": ["node"],
+    // vitest 5 pulls tinybench, whose types want DOM. Nothing here should be
+    // type checking a dependency's declarations anyway.
+    "skipLibCheck": true,
+  },
+  "exclude": ["node_modules", "eslint.config.ts"],
+}
