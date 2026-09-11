@@ -1,4 +1,4 @@
-name: Create GitHub App Token with AWS KMS
+name: GitHub App Token with AWS KMS
 description: Create a GitHub App installation access token, signing the JSON Web Token with AWS KMS
 author: Shunsuke Suzuki
 branding:
