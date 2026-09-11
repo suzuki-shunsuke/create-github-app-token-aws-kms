@@ -1,7 +1,5 @@
 # create-github-app-token-aws-kms
 
-[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/suzuki-shunsuke/create-github-app-token-aws-kms/main/LICENSE)
-
 GitHub Action to create a GitHub App installation access token, signing the
 JSON Web Token with AWS KMS.
 
@@ -124,7 +122,3 @@ precedence when both are set.
 | `token`           | The installation access token |
 | `installation-id` | The installation id           |
 | `app-slug`        | The slug of the GitHub App    |
-
-## LICENSE
-
-[MIT](LICENSE)
