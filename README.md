@@ -22,16 +22,11 @@ an IAM policy you control and can revoke.
 ## Example
 
 ```yaml
-permissions:
-  id-token: write # Required to assume the AWS IAM role via OIDC
-  contents: read
-
-env:
-  AWS_REGION: ap-northeast-1
-
 jobs:
   example:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required to assume the AWS IAM role via OIDC
     steps:
       - uses: suzuki-shunsuke/create-github-app-token-aws-kms@c4b659c57b5e2319d887706fe3f6ff0f7ee9afbc # v0.0.1
         id: token
