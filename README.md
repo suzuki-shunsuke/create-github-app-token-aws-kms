@@ -55,23 +55,28 @@ OIDC token. The credentials then stay inside this action and are never exported,
 so later steps of the job can't see them. The session lasts 900 seconds, the
 shortest AWS STS accepts.
 
-Leave it unset to use the standard AWS credential chain instead, which is what
+Leave it unset to read the credentials from `AWS_ACCESS_KEY_ID`,
+`AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` instead, which is what
 [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials)
-sets up. Use that action when you need any of the options it offers that this
-one doesn't, such as an external ID, a session policy or a custom STS endpoint.
-Note that it exports the credentials as environment variables or writes them to
+exports. Use that action when you need any of the options it offers that this
+one doesn't, such as an external ID or a session policy. Note that it exports
+the credentials as environment variables or writes them to
 `~/.aws/credentials`, where the rest of the job can read them.
+
+Those environment variables are the only other source. A profile in
+`~/.aws/credentials`, IMDS on a self-hosted EC2 runner and the credentials of an
+ECS or EKS task are not read, so reach for `aws-actions/configure-aws-credentials`
+to use any of them.
 
 ### The region
 
 A key ARN carries its region, so passing `kms-key-id` as an ARN is enough and
 nothing else needs setting. For an alias or a bare key id, set the `aws-region`
-input, or leave it to the AWS SDK, which resolves `AWS_REGION` and
-`~/.aws/config` as it normally does. When the SDK can't find one either, the
-action says which of its inputs would have answered the question.
+input, or set `AWS_REGION` or `AWS_DEFAULT_REGION`. When none of them says, the
+action fails and names which of its inputs would have answered the question.
 
-An ARN wins over the environment and a profile, because it states where the key
-actually is while they are only defaults.
+An ARN wins over the environment, because it states where the key actually is
+while `AWS_REGION` is only a default.
 
 ## The KMS key
 

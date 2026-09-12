@@ -1,16 +1,4 @@
-/**
- * Reads the region out of a KMS key ARN.
- *
- * An ARN looks like arn:aws:kms:<region>:<account>:key/<id>, so a caller
- * passing one has already said which region the key is in. Anything else, an
- * alias or a bare key id, carries no region.
- */
-export const regionFromKeyId = (keyId: string): string => {
-  if (!keyId.startsWith("arn:")) {
-    return "";
-  }
-  return keyId.split(":")[3] ?? "";
-};
+import { regionFromKeyId } from "@suzuki-shunsuke/github-app-jwt-aws-kms";
 
 export type Inputs = {
   /** The aws-region input. */
@@ -22,24 +10,26 @@ export type Inputs = {
 /**
  * Works out which AWS region the KMS key is in, if the inputs say.
  *
- * Undefined means they don't, and the AWS SDK resolves it as it normally
- * would, from AWS_REGION, ~/.aws/config and so on. Nothing here duplicates
- * that, so a profile carrying a region keeps working.
+ * Undefined means they don't, and @suzuki-shunsuke/github-app-jwt-aws-kms falls
+ * back to AWS_REGION or AWS_DEFAULT_REGION. Nothing here duplicates that.
  *
- * A key ARN wins over those, because it states where the key actually is
- * while they are only defaults.
+ * A key ARN wins over those, because it states where the key actually is while
+ * they are only defaults.
  */
 export const resolveRegion = (inputs: Inputs): string | undefined =>
   inputs.region || regionFromKeyId(inputs.keyId) || undefined;
 
-/** The AWS SDK's message when it can't resolve a region. */
-const missingRegion = "Region is missing";
+/**
+ * The message @suzuki-shunsuke/github-app-jwt-aws-kms throws when no input, key
+ * ARN or environment variable says which region the key is in.
+ */
+const missingRegion = "the AWS region is unknown";
 
 /**
  * Explains a missing region in this action's terms.
  *
- * The SDK's own message says nothing about which of this action's inputs would
- * have answered the question.
+ * The message names the library's own inputs, which say nothing about which of
+ * this action's inputs would have answered the question.
  */
 export const explainMissingRegion = (error: unknown): unknown => {
   if (error instanceof Error && error.message.includes(missingRegion)) {
