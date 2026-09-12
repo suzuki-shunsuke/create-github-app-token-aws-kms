@@ -28,7 +28,7 @@ jobs:
     permissions:
       id-token: write # Required to assume the AWS IAM role via OIDC
     steps:
-      - uses: suzuki-shunsuke/create-github-app-token-aws-kms@c4b659c57b5e2319d887706fe3f6ff0f7ee9afbc # v0.0.1
+      - uses: suzuki-shunsuke/create-github-app-token-aws-kms@91a3afd26b06729357ac310a02b658f0e3910ba9 # v0.0.2
         id: token
         with:
           client-id: ${{vars.APP_CLIENT_ID}}
