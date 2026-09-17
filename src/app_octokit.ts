@@ -7,6 +7,7 @@ import {
   type CredentialsProvider,
 } from "@suzuki-shunsuke/github-app-jwt-aws-kms";
 import { resolveRegion } from "./region";
+import { roleSessionName } from "./session_name";
 
 /**
  * Builds the AWS credentials used to call the KMS Sign API.
@@ -16,6 +17,9 @@ import { resolveRegion } from "./region";
  * the job can't see them, unlike credentials that
  * aws-actions/configure-aws-credentials exports as environment variables or
  * writes to ~/.aws/credentials.
+ *
+ * The session is named after the workflow run, which is what makes a CloudTrail
+ * kms:Sign event attributable to it.
  *
  * Undefined leaves them to @suzuki-shunsuke/github-app-jwt-aws-kms, which reads
  * AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN, so
@@ -28,8 +32,16 @@ const newCredentials = (
   if (!roleArn) {
     return undefined;
   }
-  core.info(`assuming an AWS IAM role with the GitHub OIDC token: ${roleArn}`);
-  return credentials({ roleArn, region });
+  // The session is named after the workflow run so that a CloudTrail kms:Sign
+  // event says which run asked for the signature. See ./session_name.ts.
+  const sessionName = roleSessionName({
+    runId: process.env["GITHUB_RUN_ID"] ?? "",
+    runAttempt: process.env["GITHUB_RUN_ATTEMPT"] ?? "",
+  });
+  core.info(
+    `assuming an AWS IAM role with the GitHub OIDC token: ${roleArn} (session name: ${sessionName})`,
+  );
+  return credentials({ roleArn, region, roleSessionName: sessionName });
 };
 
 /**

@@ -63,6 +63,29 @@ Those environment variables are the only other source. A profile in
 ECS or EKS task are not read, so reach for `aws-actions/configure-aws-credentials`
 to use any of them.
 
+### The role session name
+
+The session is named `gha-<run id>-<run attempt>`, for example `gha-17251230-1`.
+CloudTrail records the session name on every call the session makes, so a
+`kms:Sign` event names the workflow run that asked for the signature.
+
+This matters because the token a signature produces acts as the GitHub App. The
+GitHub audit log attributes what the token does to the app, not to the run that
+created it, so the AWS side is the only place a run can be named at all.
+
+The owner and the repository are left out. AWS STS caps the name at 64
+characters and rejects anything outside `[\w+=,.@-]`, so a slash can't separate
+the parts and a repository name would sometimes have to be truncated. A run id
+is unique across GitHub, and the `AssumeRoleWithWebIdentity` event that opened
+the session records the `sub` claim of the OIDC token, which names the
+repository. Joining the two events on the access key id of the session gets
+there.
+
+The name is not configurable. An IAM trust policy conditioning on
+`sts:RoleSessionName` has to match this shape, for example with `StringLike` and
+`gha-*`. Earlier versions of this action used `GitHubActions`, the default of
+[aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials),
+so a policy pinned to that value with `StringEquals` needs updating.
 ### The region
 
 A key ARN carries its region, so passing `kms-key-id` as an ARN is enough and
