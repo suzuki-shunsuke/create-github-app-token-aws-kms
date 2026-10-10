@@ -16,15 +16,15 @@
     "@suzuki-shunsuke/github-app-token": "npm:@jsr/suzuki-shunsuke__github-app-token@^0.2.1"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^24.13.4",
-    "@vercel/ncc": "^0.45.0",
-    "eslint": "^10.10.0",
-    "globals": "^17.12.0",
-    "jiti": "^2.7.0",
-    "prettier": "^3.9.6",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.0",
-    "vitest": "^5.0.0"
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.4",
+    "@vercel/ncc": "0.45.0",
+    "eslint": "10.10.0",
+    "globals": "17.12.0",
+    "jiti": "2.7.0",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "5.0.0"
   }
 }
