@@ -29,10 +29,6 @@ jobs:
     permissions:
       contents: read
 
-  typos:
-    uses: ./.github/workflows/typos.yaml
-    permissions: {}
-
   create_pr_branch:
     uses: ./.github/workflows/wc-create-pr-branch.yaml
     with:
@@ -44,3 +40,11 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+
+  test-workflow:
+    uses: suzuki-shunsuke/test-workflow/.github/workflows/test.yaml@51ece8dcaabff59820bfb2053c56e3cb281cf7b2 # v0.0.1
+    with:
+      aqua_version: v2.64.0
+    permissions:
+      contents: read
+      pull-requests: read
