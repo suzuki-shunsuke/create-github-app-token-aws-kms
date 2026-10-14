@@ -6,8 +6,8 @@ on:
       TAKUMI_GUARD_BOT_ID:
         required: true
 jobs:
-  create_pr_branch:
-    uses: ./.github/workflows/wc-create-pr-branch.yaml
+  release:
+    uses: suzuki-shunsuke/js-action-release-workflow/.github/workflows/release.yaml@89c0f9f455f977a280103a7f450573adac9d8cf6 # v0.0.1
     with:
       version: pr/${{github.event.pull_request.number}}
       pr: ${{github.event.pull_request.number}}
@@ -16,6 +16,15 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
+
+  # npm run lint and npm test
+  test-js:
+    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@8f0b1fefeca5d88fc714b957f9aed1c7e29cae3b # v0.0.1
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+    permissions:
+      contents: read
       id-token: write
 
   test-workflow:
