@@ -12,7 +12,7 @@
     "types": ["node"],
     // vitest 5 pulls tinybench, whose types want DOM. Nothing here should be
     // type checking a dependency's declarations anyway.
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "eslint.config.ts"],
+  "exclude": ["node_modules", "eslint.config.ts"]
 }

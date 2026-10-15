@@ -86,6 +86,7 @@ The name is not configurable. An IAM trust policy conditioning on
 `gha-*`. Earlier versions of this action used `GitHubActions`, the default of
 [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials),
 so a policy pinned to that value with `StringEquals` needs updating.
+
 ### The region
 
 A key ARN carries its region, so passing `kms-key-id` as an ARN is enough and

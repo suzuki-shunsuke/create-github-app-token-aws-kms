@@ -6,9 +6,24 @@ on:
       TAKUMI_GUARD_BOT_ID:
         required: true
 jobs:
-  create_pr_branch:
-    uses: ./.github/workflows/wc-create-pr-branch.yaml
+  # Install npm packages once and share node_modules with the test-js and release jobs,
+  # so they run in parallel against the same commit (the merge commit of the pull request)
+  npm:
+    uses: suzuki-shunsuke/download-npm-package-action/.github/workflows/download.yaml@ebbf371f6e38b49824a73f8c6680e2e1f83db2e8 # v0.0.1
+    permissions:
+      contents: read
+      id-token: write
     with:
+      ref: refs/pull/${{github.event.pull_request.number}}/merge
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+
+  release:
+    uses: suzuki-shunsuke/js-action-release-workflow/.github/workflows/release.yaml@8be0b473dc9410a79482fad9e42fdf52d10118a3 # v0.0.4
+    needs: npm
+    with:
+      npm_artifact_name: node_modules
+      ref: ${{needs.npm.outputs.sha}}
       version: pr/${{github.event.pull_request.number}}
       pr: ${{github.event.pull_request.number}}
     secrets:
@@ -17,6 +32,19 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+
+  # npm run lint and npm test
+  test-js:
+    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@93619ca5c984cc300f209f5b71cc3284838323b5 # v0.0.2
+    needs: npm
+    secrets:
+      TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      npm_artifact_name: node_modules
+      ref: ${{needs.npm.outputs.sha}}
 
   test-workflow:
     uses: suzuki-shunsuke/test-workflow/.github/workflows/test.yaml@51ece8dcaabff59820bfb2053c56e3cb281cf7b2 # v0.0.1
