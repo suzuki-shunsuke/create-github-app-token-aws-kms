@@ -5,4 +5,13 @@
     "github>aquaproj/aqua-renovate-config#2.13.0",
     "github>aquaproj/aqua-renovate-config:file#2.13.0(aqua/imports/.*\\.yaml)",
   ],
+  packageRules: [
+    {
+      // typescript-eslint doesn't support TypeScript 7 yet.
+      // Remove this rule when it supports TypeScript 7.
+      matchPackageNames: ["typescript"],
+      matchUpdateTypes: ["major"],
+      enabled: false,
+    },
+  ],
 }
