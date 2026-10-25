@@ -9,7 +9,7 @@ jobs:
   # Install npm packages once and share node_modules with the test-js and release jobs,
   # so they run in parallel against the same commit (the merge commit of the pull request)
   npm:
-    uses: suzuki-shunsuke/download-npm-package-action/.github/workflows/download.yaml@7b0c4cea0dbf5a58ec2b35c3c6432584369c1bfe # v0.0.2
+    uses: suzuki-shunsuke/download-npm-package-action/.github/workflows/download.yaml@356be7a431f3fe7ff4a3a61e3dedb3a571f954e7 # v0.0.3
     permissions:
       contents: read
       id-token: write
@@ -19,7 +19,7 @@ jobs:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
 
   release:
-    uses: suzuki-shunsuke/js-action-release-workflow/.github/workflows/release.yaml@42e36aaa98bac85ec0f17d929aede6c61faa2fff # v0.0.5
+    uses: suzuki-shunsuke/js-action-release-workflow/.github/workflows/release.yaml@efac7db543858e8cd879d715fc025b360636e907 # v0.0.6
     needs: npm
     with:
       npm_artifact_name: node_modules
@@ -35,7 +35,7 @@ jobs:
 
   # npm run lint and npm test
   test-js:
-    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@0f107d3b611b6139f139a3a9a3ecdafcb59b913e # v0.0.3
+    uses: suzuki-shunsuke/js-action-test-workflow/.github/workflows/test.yaml@c834a7dfc9560fb54167eaf33f94eb28f1a4e222 # v0.0.4
     needs: npm
     secrets:
       TAKUMI_GUARD_BOT_ID: ${{secrets.TAKUMI_GUARD_BOT_ID}}
